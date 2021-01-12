@@ -12,22 +12,28 @@
 
 <body>
     <div>
-        <div class="header-blue" style="height: 2500px;">
+        <div class="header-blue" style="height: 3000px;">
             <nav class="navbar navbar-light navbar-expand-md navigation-clean-search" style="padding-bottom: 0px;">
                 <div class="container-fluid"><a class="navbar-brand" href="#">Pensive Security</a></div>
             </nav>
             <div class="container hero" style="height: 1800px;">
                 <div class="row" style="height: 1020px;margin: 0px;margin-bottom: 40px;">
-                    <div class="col-12 col-lg-6 col-xl-5 offset-xl-1" style="height: 1020px;width: 60%;">
+                    <div class="col-12 col-lg-6 col-xl-5 offset-xl-3" style="height: 1020px;width: 60%;">
                         <h1 style="margin-top: 20px;">Cit0day Breach Detection</h1>
-                        <p class="text-left" style="height: 320px;padding-bottom: 20px;">You can use this site to compare the domains listed in your password manager (such as LastPass and 1Password) with those contained in the Cit0day Breach.<br><br>To check for breached credentials, please perform the following actions:<br><br>1. Export your data from your password manager to a CSV (.csv) file.<br><br><br></p>
+                        <p class="text-left" style="height: 320px;padding-bottom: 20px;">You can use this site to compare the domains listed in your password manager (such as LastPass and 1Password) with those contained in the Cit0day Breach.<br><br>To check for breached credentials, please perform the following actions:<br><br><b>1.</b> Export your data from your password manager to a CSV (.csv) file.<br><br><br></p>
                         <ul>
-                            <li class="text-left text-light">LastPass (<a href="https://support.logmeininc.com/lastpass/help/how-do-i-nbsp-export-stored-data-from-lastpass-using-a-generic-csv-file">Export Instructions</a>)</li>
-                            <li class="text-left text-light" style="margin-bottom: 40px;">1Password (<a href="https://support.1password.com/export/">Export Instructions</a>)</li>
+                            <li class="text-left text-light">LastPass (<a href="https://support.nordpass.com/hc/en-us/articles/360002451278-How-to-export-passwords-from-LastPass-">Export Instructions</a>)</li>
+                            <li class="text-left text-light">1Password (<a href="https://support.nordpass.com/hc/en-us/articles/360002451158-How-to-export-passwords-from-1Password-">Export Instructions</a>)</li>
+                            <li class="text-left text-light">Keeper (<a href="https://support.nordpass.com/hc/en-us/articles/360002451678-How-to-export-passwords-from-Keeper-Security-">Export Instructions</a>)</li>
+                            <li class="text-left text-light">Dashlane (<a href="https://support.nordpass.com/hc/en-us/articles/360002451578-How-to-export-passwords-from-Dashlane-">Export Instructions</a>)</li>
+                            <li class="text-left text-light">Roboform (<a href="https://support.nordpass.com/hc/en-us/articles/360002451618-How-to-export-passwords-from-Roboform-">Export Instructions</a>)</li>
+                            <li class="text-left text-light">Bitwarden (<a href="https://support.nordpass.com/hc/en-us/articles/360002451898-How-to-export-passwords-from-Bitwarden-">Export Instructions</a>)</li>
+                            <li class="text-left text-light">KeePass (<a href="https://support.nordpass.com/hc/en-us/articles/360002873577-How-to-export-passwords-from-KeePass-">Export Instructions</a>)</li>
+                            <li class="text-left text-light" style="margin-bottom: 40px;">KeePassX (<a href="https://support.nordpass.com/hc/en-us/articles/360002448117-How-to-export-passwords-from-KeePassX-">Export Instructions</a>)</li>
                         </ul>
-                        <p class="text-left">2. Open the exported CSV file using Microsoft Excel (or another similar tool). Remove the column labelled "passwords" and any other columns containing sensitive data and save the file again as a CSV. Make sure not to delete the "url" column. If the column containing the URLs of the entry is named something different than "url", change that column to "url". Delete the original file containing the passwords and empty your trash.<br></p>
-                        <p class="text-left" style="font-size: 15px;"><strong>Note: Your CSV file will be processed locally in the browser and no data from the CVS file will leave your computer while using this tool. However, you should NEVER use a tool like this without stripping out your passwords and other sensitive data, even if the website tells you it is ok. Please use Excel (or another tool) to remove the column of passwords that appear in the exported CSV file and make sure you save it as a CSV file again.</strong></p>
-                        <p class="text-left">3. Use the button below and select the edited CSV (which does not contain any passwords).<br>4. After you select the file, the browser will check to see if any domains in your password manager match the list of breached domains. If there are any breached domains they will appear in a table below. For each match in the table, navigate to that website and change your password immedietely.<br></p><input type="file" id="uploadfile" onChange="readFile(this)" class="btn btn-light btn-block btn-md text center action-button" style="margin-bottom: 30px;">
+                        <p class="text-left"><b>2.</b> Open the exported CSV file using Microsoft Excel (or another similar tool). Remove the column labelled "passwords" and any other columns containing sensitive data and save the file again as a CSV. Make sure not to delete the "url" column. If the column containing the URLs of the entry is named something different than "url", change that column to "url". Delete the original file containing the passwords and empty your trash.<br></p>
+                        <p class="text-left" style="font-size: 15px;"><strong>Note: <b>Your CSV file will be processed locally in the browser and no password data from the CVS file will leave your computer while using this tool</b>. However, <b style="color:red">you should NEVER use a tool like this without first stripping out your passwords and other sensitive data, even if the website tells you it is ok</b>. Please use Excel (or another tool) to remove the column of passwords that appear in the exported CSV file and make sure you save it as a CSV file again.</strong></p>
+                        <p class="text-left"><b>3.</b> Use the button below and select the edited CSV (which does not contain any passwords).<br><br><b>4.</b> After you select the file, the browser will check to see if any domains in your password manager match the list of breached domains. If there are any breached domains they will appear in a table below. For each match in the table, navigate to that website and change your password immedietely. If you haven't already, <b style="color: red">delete the exported CSV file</b> and the version you modified and empty your trash.<br></p><input type="file" id="uploadfile" accept=".csv" onChange="readFile(this)" class="btn btn-light btn-block btn-md text center action-button" style="margin-bottom: 30px;">
                         <p id="errorMessage"></p>
                         <div class="table-responsive text-light">
                             <table class="table">
@@ -120,15 +126,13 @@ async function parseData(data){
         var userUrl = csvData[i][urlColumnIndex]
         for(var j = 0; j < domains.length; j++){
             if(userUrl && domains[j] && userUrl.includes(domains[j])){
-              console.log("FOUND COMPROMISED DOMAIN! You need to change your password for:")
-              console.log(domains[j])
               resultData.push([domains[j],"Change Immedietely"])
             }
         }
       }
       populateTbody(resultData)
     } else {
-      document.getElementById("errorMessage").innerHTML = "<b style='color: red'>Error:</b>The file does not appear to contain a column named 'url' or 'domain'. Please try again with a valid CSV file containing a column named 'url' with all of the domains registered in your password manager."
+      document.getElementById("errorMessage").innerHTML = "<b style='color: red'>Error:</b>The file does not appear to contain a column named 'url'. Please try again with a valid CSV file containing a column named 'url' with all of the domains registered in your password manager."
     }
 
     //console.table(csvData);
