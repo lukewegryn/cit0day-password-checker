@@ -109,6 +109,7 @@ async function readFile(input) {
 }
 
 async function parseData(data){
+    document.getElementById("errorMessage").innerHTML = ""
     let csvData = [];
     let lbreak = data.split("\n");
     lbreak.forEach(res => {
