@@ -4,17 +4,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Cut0day Breach Checker</title>
+    <title>Cit0day Breach Checker</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
     <link rel="stylesheet" href="assets/css/styles.min.css">
+    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
 </head>
 
 <body>
     <div>
         <div class="header-blue" style="height: 3000px;">
             <nav class="navbar navbar-light navbar-expand-md navigation-clean-search" style="padding-bottom: 0px;">
-                <div class="container-fluid"><a class="navbar-brand" href="#">Pensive Security</a></div>
+                <div class="container-fluid"><a class="navbar-brand" href="https://pensivesecurity.io">Pensive Security</a></div>
             </nav>
             <div class="container hero" style="height: 1800px;">
                 <div class="row" style="height: 1020px;margin: 0px;margin-bottom: 40px;">
@@ -29,11 +30,12 @@
                             <li class="text-left text-light">Roboform (<a href="https://support.nordpass.com/hc/en-us/articles/360002451618-How-to-export-passwords-from-Roboform-">Export Instructions</a>)</li>
                             <li class="text-left text-light">Bitwarden (<a href="https://support.nordpass.com/hc/en-us/articles/360002451898-How-to-export-passwords-from-Bitwarden-">Export Instructions</a>)</li>
                             <li class="text-left text-light">KeePass (<a href="https://support.nordpass.com/hc/en-us/articles/360002873577-How-to-export-passwords-from-KeePass-">Export Instructions</a>)</li>
-                            <li class="text-left text-light" style="margin-bottom: 40px;">KeePassX (<a href="https://support.nordpass.com/hc/en-us/articles/360002448117-How-to-export-passwords-from-KeePassX-">Export Instructions</a>)</li>
+                            <li class="text-left text-light">KeePassX (<a href="https://support.nordpass.com/hc/en-us/articles/360002448117-How-to-export-passwords-from-KeePassX-">Export Instructions</a>)</li>
+                            <li class="text-left text-light" style="margin-bottom: 40px;">Other (<a href="https://support.nordpass.com/hc/en-us/sections/360000636538-Importing-and-Exporting">Export Instructions</a>)</li>
                         </ul>
                         <p class="text-left"><b>2.</b> Open the exported CSV file using Microsoft Excel (or another similar tool). Remove the column labelled "passwords" and any other columns containing sensitive data and save the file again as a CSV. Make sure not to delete the "url" column. If the column containing the URLs of the entry is named something different than "url", change that column to "url". Delete the original file containing the passwords and empty your trash.<br></p>
                         <p class="text-left" style="font-size: 15px;"><strong>Note: <b>Your CSV file will be processed locally in the browser and no password data from the CVS file will leave your computer while using this tool</b>. However, <b style="color:red">you should NEVER use a tool like this without first stripping out your passwords and other sensitive data, even if the website tells you it is ok</b>. Please use Excel (or another tool) to remove the column of passwords that appear in the exported CSV file and make sure you save it as a CSV file again.</strong></p>
-                        <p class="text-left"><b>3.</b> Use the button below and select the edited CSV (which does not contain any passwords).<br><br><b>4.</b> After you select the file, the browser will check to see if any domains in your password manager match the list of breached domains. If there are any breached domains they will appear in a table below. For each match in the table, navigate to that website and change your password immedietely. If you haven't already, <b style="color: red">delete the exported CSV file</b> and the version you modified and empty your trash.<br></p><input type="file" id="uploadfile" accept=".csv" onChange="readFile(this)" class="btn btn-light btn-block btn-md text center action-button" style="margin-bottom: 30px;">
+                        <p class="text-left"><b>3.</b> Use the button below and select the edited CSV (which does not contain any passwords).<br><br><b>4.</b> After you select the file, the browser will check to see if any domains in your password manager match the list of breached domains. If there are any breached domains they will appear in a table below. For each match in the table, navigate to that website and change your password immedietely. Once you're done with this tool, <b style="color: red">delete the exported CSV file</b> and the version you modified and empty your trash.<br></p><input type="file" id="uploadfile" accept=".csv" onChange="readFile(this)" class="btn btn-light btn-block btn-md text center action-button" style="margin-bottom: 30px;">
                         <p id="errorMessage"></p>
                         <div class="table-responsive text-light">
                             <table class="table">
@@ -70,8 +72,12 @@ var obj_csv = {
 function populateTbody(data){
   //data = [["goody.com","Change Immediately"],["gooder.com","Change Immediately"],["goodly.com","Change Immediately"]]
   tableHTML = ''
-  for(var i = 0; i < data.length; i++){
-    tableHTML += '<tr><td style="color: rgb(255,255,255);">' + data[i][0] + '</td><td style="color: rgb(255,0,0);">' + data[i][1] + '</td></tr>'
+  if (data.length > 0){
+    for(var i = 0; i < data.length; i++){
+      tableHTML += '<tr><td style="color: rgb(255,255,255);">' + data[i][0] + '</td><td style="color: rgb(255,0,0);">' + data[i][1] + '</td></tr>'
+    }
+  } else {
+    tableHTML = '<tr><td style="color: rgb(255,255,255);">Great! No matches found.</td><td style="color: rgb(124,252,0); text-align:center">✓</td></tr>'
   }
 
   document.getElementById("tableBody").innerHTML = tableHTML;
@@ -108,14 +114,18 @@ async function parseData(data){
     lbreak.forEach(res => {
         csvData.push(res.split(","));
     });
+    console.log("Break1")
     var urlColumnIndex = null
     let firstLine = csvData[0]
     for(var i = 0; i < firstLine.length; i++){
-      if(firstLine[i] == "url"){
+      console.log(firstLine[i])
+      if(firstLine[i].trim().toLowerCase().includes("url")){
         console.log("Found it!")
         urlColumnIndex = i;
       }
     }
+
+    console.log("Break2")
 
     if(urlColumnIndex != null){
       console.log("The index of the column is: " + urlColumnIndex)
@@ -124,6 +134,7 @@ async function parseData(data){
       var resultData = []
       for (var i = 1; i < csvData.length; i++){
         var userUrl = csvData[i][urlColumnIndex]
+        console.log(userUrl)
         for(var j = 0; j < domains.length; j++){
             if(userUrl && domains[j] && userUrl.includes(domains[j])){
               resultData.push([domains[j],"Change Immedietely"])
