@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Cut0day Breach Checker</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+    <link rel="stylesheet" href="assets/css/styles.min.css">
+</head>
+
+<body>
+    <div>
+        <div class="header-blue" style="height: 2500px;">
+            <nav class="navbar navbar-light navbar-expand-md navigation-clean-search" style="padding-bottom: 0px;">
+                <div class="container-fluid"><a class="navbar-brand" href="#">Pensive Security</a></div>
+            </nav>
+            <div class="container hero" style="height: 1800px;">
+                <div class="row" style="height: 1020px;margin: 0px;margin-bottom: 40px;">
+                    <div class="col-12 col-lg-6 col-xl-5 offset-xl-1" style="height: 1020px;width: 60%;">
+                        <h1 style="margin-top: 20px;">Cit0day Breach Detection</h1>
+                        <p class="text-left" style="height: 320px;padding-bottom: 20px;">You can use this site to compare the domains listed in your password manager (such as LastPass and 1Password) with those contained in the Cit0day Breach.<br><br>To check for breached credentials, please perform the following actions:<br><br>1. Export your data from your password manager to a CSV (.csv) file.<br><br><br></p>
+                        <ul>
+                            <li class="text-left text-light">LastPass (<a href="https://support.logmeininc.com/lastpass/help/how-do-i-nbsp-export-stored-data-from-lastpass-using-a-generic-csv-file">Export Instructions</a>)</li>
+                            <li class="text-left text-light" style="margin-bottom: 40px;">1Password (<a href="https://support.1password.com/export/">Export Instructions</a>)</li>
+                        </ul>
+                        <p class="text-left">2. Open the exported CSV file using Microsoft Excel (or another similar tool). Remove the column labelled "passwords" and any other columns containing sensitive data and save the file again as a CSV. Make sure not to delete the "url" column. If the column containing the URLs of the entry is named something different than "url", change that column to "url". Delete the original file containing the passwords and empty your trash.<br></p>
+                        <p class="text-left" style="font-size: 15px;"><strong>Note: Your CSV file will be processed locally in the browser and no data from the CVS file will leave your computer while using this tool. However, you should NEVER use a tool like this without stripping out your passwords and other sensitive data, even if the website tells you it is ok. Please use Excel (or another tool) to remove the column of passwords that appear in the exported CSV file and make sure you save it as a CSV file again.</strong></p>
+                        <p class="text-left">3. Use the button below and select the edited CSV (which does not contain any passwords).<br>4. After you select the file, the browser will check to see if any domains in your password manager match the list of breached domains. If there are any breached domains they will appear in a table below. For each match in the table, navigate to that website and change your password immedietely.<br></p><input type="file" id="uploadfile" onChange="readFile(this)" class="btn btn-light btn-block btn-md text center action-button" style="margin-bottom: 30px;">
+                        <p id="errorMessage"></p>
+                        <div class="table-responsive text-light">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="color: rgb(235,239,241);">Domain</th>
+                                        <th style="color: rgb(235,239,241);">Password Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    <tr>
+                                        <td style="color: rgb(255,255,255);">"Choose File" Above</td>
+                                        <td style="color: rgb(235,239,241);">-</td>
+                                    </tr>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+<script>
+var obj_csv = {
+    size:0,
+    dataFile:[]
+};
+
+function populateTbody(data){
+  //data = [["goody.com","Change Immediately"],["gooder.com","Change Immediately"],["goodly.com","Change Immediately"]]
+  tableHTML = ''
+  for(var i = 0; i < data.length; i++){
+    tableHTML += '<tr><td style="color: rgb(255,255,255);">' + data[i][0] + '</td><td style="color: rgb(255,0,0);">' + data[i][1] + '</td></tr>'
+  }
+
+  document.getElementById("tableBody").innerHTML = tableHTML;
+}
+
+async function fetchCompromisedDomainsList(url){
+  const response = await fetch(url);
+  // waits until the request completes...
+  let list = await response.text()
+  let domains = list.split("\n")
+  console.log(domains);
+  return domains;
+}
+
+async function readFile(input) {
+    console.log(input)
+    if (input.files && input.files[0]) {
+      let reader = new FileReader();
+      reader.readAsBinaryString(input.files[0]);
+      reader.onload = function (e) {
+          console.log(e);
+          obj_csv.size = e.total;
+          obj_csv.dataFile = e.target.result
+          console.log(obj_csv.dataFile)
+          parseData(obj_csv.dataFile)
+
+      }
+    }
+}
+
+async function parseData(data){
+    let csvData = [];
+    let lbreak = data.split("\n");
+    lbreak.forEach(res => {
+        csvData.push(res.split(","));
+    });
+    var urlColumnIndex = null
+    let firstLine = csvData[0]
+    for(var i = 0; i < firstLine.length; i++){
+      if(firstLine[i] == "url"){
+        console.log("Found it!")
+        urlColumnIndex = i;
+      }
+    }
+
+    if(urlColumnIndex != null){
+      console.log("The index of the column is: " + urlColumnIndex)
+      var url = "https://gist.githubusercontent.com/lukewegryn/9f4fd14a47f5e91bdb2d9014fc08e608/raw/1d7d24fa74ede6f3ea1aa2d6b1eadcd5bf1bf26b/Cit0day.sites.lst"
+      var domains = await fetchCompromisedDomainsList(url)
+      var resultData = []
+      for (var i = 1; i < csvData.length; i++){
+        var userUrl = csvData[i][urlColumnIndex]
+        for(var j = 0; j < domains.length; j++){
+            if(userUrl && domains[j] && userUrl.includes(domains[j])){
+              console.log("FOUND COMPROMISED DOMAIN! You need to change your password for:")
+              console.log(domains[j])
+              resultData.push([domains[j],"Change Immedietely"])
+            }
+        }
+      }
+      populateTbody(resultData)
+    } else {
+      document.getElementById("errorMessage").innerHTML = "<b style='color: red'>Error:</b>The file does not appear to contain a column named 'url' or 'domain'. Please try again with a valid CSV file containing a column named 'url' with all of the domains registered in your password manager."
+    }
+
+    //console.table(csvData);
+}
+</script>
+
+</html>
+
+</html>
